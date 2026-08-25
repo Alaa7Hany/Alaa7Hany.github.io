@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alaa Hany ElGebaly — Mobile Application Developer (Android Native & Flutter)</title>
+  
+  <!-- SEO & Meta -->
+  <meta name="description" content="Portfolio of Alaa Hany ElGebaly — Mobile Application Developer specializing in Native Android (Kotlin & Jetpack Compose), Cross-Platform (Flutter & Dart), and Gemini AI integration." />
+  <meta name="keywords" content="Alaa Hany, Mobile Developer, Android Developer, Kotlin, Jetpack Compose, Flutter, Dart, Swift, iOS, ITI Graduate, Gemini AI SDK, Clean Architecture, MVI" />
+  <meta name="author" content="Alaa Hany ElGebaly" />
+  
+  <!-- OpenGraph Social Preview -->
+  <meta property="og:title" content="Alaa Hany ElGebaly — Mobile Developer Portfolio" />
+  <meta property="og:description" content="Explore verified Android Native, Flutter, iOS, and Ktor Backend projects engineered with Clean Architecture and Gemini AI." />
+  <meta property="og:type" content="website" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient Canvas -->
+  <div class="ambient-glow-canvas"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- =========================================================================
+       1. Sticky Navigation Bar
+       ========================================================================= -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#home" class="nav-brand">
+        <div class="nav-logo-badge">AE</div>
+        <span class="nav-brand-text">Alaa ElGebaly</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#experience" class="nav-link">Experience</a></li>
+          <li><a href="#resume" class="nav-link">Resume</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle Switch -->
+        <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle Light/Dark Theme">
+          ☀️
+        </button>
+
+        <div class="status-badge">
+          <span class="pulse-dot"></span>
+          <span>Open to Roles</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================================
+         2. Hero Section (Bigger Avatar, Visual Identity, Quick Contacts, Stats)
+         ========================================================================= -->
+    <section class="hero" id="home">
+      <div class="container">
+        
+        <!-- Bigger Avatar with Glowing Pip-Boy Border & Mobile Badge -->
+        <div class="hero-avatar-wrap">
+          <img src="assets/profile.webp" alt="Alaa Hany ElGebaly" class="hero-avatar-img" />
+          <div class="hero-avatar-badge" title="Mobile Applications Developer">📱</div>
+        </div>
+
+        <div class="hero-pill">
+          <span>⚡</span>
+          <span>Mobile Applications Engineer • Native Android & Flutter</span>
+        </div>
+
+        <h1 class="hero-title">
+          Building Scalable, Clean & <span class="gradient-text">AI-Powered</span> Mobile Apps.
+        </h1>
+
+        <p class="hero-subtitle">
+          Hi, I'm <strong>Alaa Hany ElGebaly</strong>. I engineer high-performance mobile applications specializing in <strong>Native Android (Kotlin & Jetpack Compose)</strong>, <strong>Cross-Platform (Flutter & Dart)</strong>, and <strong>Multimodal AI Integrations</strong>.
+        </p>
+
+        <!-- Quick Contacts Strip -->
+        <div class="hero-quick-contacts">
+          <a href="mailto:elgebaly3laa@gmail.com" class="quick-contact-link" title="Send Email">
+            <span>📧</span>
+            <span>elgebaly3laa@gmail.com</span>
+          </a>
+          <a href="https://linkedin.com/in/alaa-elgebaly" target="_blank" rel="noopener" class="quick-contact-link" title="LinkedIn Profile">
+            <span>💼</span>
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://github.com/Alaa7Hany" target="_blank" rel="noopener" class="quick-contact-link" title="GitHub Profile">
+            <span>🐙</span>
+            <span>GitHub</span>
+          </a>
+          <a href="tel:+201027213855" class="quick-contact-link" title="Phone Call">
+            <span>📞</span>
+            <span>+20 102 721 3855</span>
+          </a>
+        </div>
+
+        <!-- Hero Actions -->
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">
+            <span>Explore Projects</span>
+            <span>↓</span>
+          </a>
+          <a href="#resume" class="btn btn-glass">
+            <span>View CVs</span>
+            <span>📄</span>
+          </a>
+          <a href="#contact" class="btn btn-glass">
+            <span>Get in Touch</span>
+            <span>💬</span>
+          </a>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="hero-stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Completed Projects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">1.3k+</div>
+            <div class="stat-label">GitHub Contributions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">9-Month</div>
+            <div class="stat-label">ITI Professional Diploma</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">Honors</div>
+            <div class="stat-label">B.Sc. Computer Engineering</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         3. About Section
+         ========================================================================= -->
+    <section class="about" id="about">
+      <div class="container">
+        <h2 class="section-title">About & Engineering Philosophy</h2>
+        <p class="section-subtitle">A blend of computer systems engineering rigor, modern mobile architecture, and generative AI capabilities.</p>
+
+        <div class="skill-category-card" style="max-width: 860px; margin: 0 auto; line-height: 1.75;">
+          <p style="margin-bottom: 1rem; font-size: 1.02rem;">
+            I am a mobile software engineer with deep expertise in <strong>Kotlin, Jetpack Compose, Coroutines & Flow, and Clean Architecture (MVI/MVVM)</strong>. Having graduated from the intensive <strong>9-Month Professional Mobile Development Program at the Information Technology Institute (ITI)</strong> and holding a <strong>B.Sc. in Computer & Systems Engineering from Zagazig University with Honors</strong>, I build mobile applications with a deep understanding of low-level concurrency, offline persistence, and battery-efficient background tasks.
+          </p>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Beyond native Android, I develop production-grade cross-platform apps in <strong>Flutter (BLoC/Cubit)</strong> and native iOS applications with <strong>Swift (UIKit/AutoLayout)</strong>. I actively integrate generative AI capabilities (Google Gemini Live SDK, Agentic AI pipelines) and backend microservices (Ktor, PostgreSQL) to deliver complete, end-to-end digital solutions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         4. Technical Skills Matrix (Comprehensive & Deep)
+         ========================================================================= -->
+    <section class="skills" id="skills">
+      <div class="container">
+        <h2 class="section-title">Technical Skills & Tooling</h2>
+        <p class="section-subtitle">Verified proficiencies and architectural patterns applied across mobile codebases.</p>
+
+        <div class="skills-grid">
+          <!-- Android Native -->
+          <div class="skill-category-card">
+            <div class="skill-cat-header">
+              <div class="skill-cat-icon">🤖</div>
+              <h3 class="skill-cat-title">Android Native Ecosystem</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="skill-chip">Kotlin</span>
+              <span class="skill-chip">Jetpack Compose</span>
+              <span class="skill-chip">Coroutines & Flow</span>
+              <span class="skill-chip">StateFlow / SharedFlow</span>
+              <span class="skill-chip">Clean Architecture (MVI/MVVM)</span>
+              <span class="skill-chip">Room DB</span>
+              <span class="skill-chip">Hilt / Koin DI</span>
+              <span class="skill-chip">CameraX</span>
+              <span class="skill-chip">WorkManager</span>
+              <span class="skill-chip">Navigation 3</span>
+              <span class="skill-chip">DataStore</span>
+              <span class="skill-chip">Services & Broadcasts</span>
+              <span class="skill-chip">JUnit 5 & MockK</span>
+            </div>
+          </div>
+
+          <!-- Cross-Platform & iOS -->
+          <div class="skill-category-card">
+            <div class="skill-cat-header">
+              <div class="skill-cat-icon">🌐</div>
+              <h3 class="skill-cat-title">Cross-Platform & iOS</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="skill-chip">Flutter</span>
+              <span class="skill-chip">Dart</span>
+              <span class="skill-chip">BLoC Pattern</span>
+              <span class="skill-chip">Cubit</span>
+              <span class="skill-chip">Dio & Interceptors</span>
+              <span class="skill-chip">GetIt Service Locator</span>
+              <span class="skill-chip">Flutter Secure Storage</span>
+              <span class="skill-chip">sqflite (SQLite)</span>
+              <span class="skill-chip">Swift</span>
+              <span class="skill-chip">UIKit / AutoLayout</span>
+              <span class="skill-chip">SwiftUI</span>
+              <span class="skill-chip">CoreData</span>
+              <span class="skill-chip">CoreLocation</span>
+              <span class="skill-chip">Alamofire</span>
+              <span class="skill-chip">Lottie iOS</span>
+              <span class="skill-chip">XCTest</span>
+            </div>
+          </div>
+
+          <!-- AI, APIs & Cloud -->
+          <div class="skill-category-card">
+            <div class="skill-cat-header">
+              <div class="skill-cat-icon">🧠</div>
+              <h3 class="skill-cat-title">AI, APIs & Cloud Services</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="skill-chip">Google Gemini AI SDK</span>
+              <span class="skill-chip">Agentic AI (n8n Webhooks)</span>
+              <span class="skill-chip">Shopify Storefront GraphQL</span>
+              <span class="skill-chip">Paymob Payment SDK</span>
+              <span class="skill-chip">Stripe Mobile SDK</span>
+              <span class="skill-chip">Firebase Auth</span>
+              <span class="skill-chip">Cloud Firestore</span>
+              <span class="skill-chip">Firebase Storage</span>
+              <span class="skill-chip">FCM Push Notifications</span>
+              <span class="skill-chip">Apollo GraphQL</span>
+              <span class="skill-chip">Retrofit2 REST</span>
+              <span class="skill-chip">Postman</span>
+            </div>
+          </div>
+
+          <!-- Backend & DevOps -->
+          <div class="skill-category-card">
+            <div class="skill-cat-header">
+              <div class="skill-cat-icon">⚙️</div>
+              <h3 class="skill-cat-title">Backend & DevOps</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="skill-chip">Kotlin (Ktor Server)</span>
+              <span class="skill-chip">PostgreSQL (Supabase)</span>
+              <span class="skill-chip">JetBrains Exposed ORM</span>
+              <span class="skill-chip">JWT Auth & BCrypt</span>
+              <span class="skill-chip">Docker Multi-Stage</span>
+              <span class="skill-chip">Kubernetes (K8s)</span>
+              <span class="skill-chip">Jenkins CI/CD</span>
+              <span class="skill-chip">Terraform (Azure)</span>
+              <span class="skill-chip">Ansible</span>
+              <span class="skill-chip">Prometheus & Grafana</span>
+              <span class="skill-chip">Linux (Bash)</span>
+              <span class="skill-chip">Git / GitHub Actions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. Projects Showcase Section (Top 3 Initial + Expand Button)
+         ========================================================================= -->
+    <section class="projects" id="projects">
+      <div class="container">
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-subtitle">Real-world mobile and backend applications engineered with clean architecture, offline resilience, and modern design patterns.</p>
+
+        <!-- Category Filters -->
+        <div class="filter-tabs" id="filterTabs">
+          <button class="tab-btn active" data-filter="all">All Projects (12)</button>
+          <button class="tab-btn" data-filter="android">Android Native (Kotlin/Compose)</button>
+          <button class="tab-btn" data-filter="flutter">Cross-Platform (Flutter)</button>
+          <button class="tab-btn" data-filter="ios">iOS Native (Swift)</button>
+          <button class="tab-btn" data-filter="backend">Backend & DevOps (Ktor / Cloud)</button>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Populated dynamically via app.js -->
+        </div>
+
+        <!-- Show All Projects Button -->
+        <div class="show-more-projects-wrap" id="showMoreProjectsWrap">
+          <button type="button" class="btn-show-more" id="btnToggleAllProjects" onclick="toggleAllProjects()">
+            <span>Show All Projects (12)</span>
+            <span>↓</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         6. Experience & Education Timeline
+         ========================================================================= -->
+    <section class="experience" id="experience">
+      <div class="container">
+        <h2 class="section-title">Education & Professional Traineeships</h2>
+        <p class="section-subtitle">Structured academic foundation and professional engineering milestones.</p>
+
+        <div class="timeline-wrap">
+          <!-- ITI -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div>
+                  <div class="timeline-role">9-Month Postgraduate Professional Diploma</div>
+                  <div class="timeline-org">Information Technology Institute (ITI) — Ismailia, Egypt</div>
+                </div>
+                <span class="timeline-period">Oct 2025 – Aug 2026</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Specialized in <strong>Mobile Applications Development (Native)</strong>: Advanced Android (Kotlin, Jetpack Compose, Coroutines, MVI/MVVM, Clean Architecture, Hilt/Koin).</li>
+                <li>Engineered native iOS applications with Swift, UIKit, SwiftUI, and CoreData.</li>
+                <li>Architected cross-platform mobile solutions with Flutter and Kotlin Multiplatform (KMP).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Zagazig University -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div>
+                  <div class="timeline-role">B.Sc. in Computer & Systems Engineering</div>
+                  <div class="timeline-org">Zagazig University — Faculty of Engineering</div>
+                </div>
+                <span class="timeline-period">Sep 2020 – May 2025</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Graduated with cumulative grade: <strong>Very Good with Honors</strong>.</li>
+                <li>Graduation Project: <em>Taier</em> — Smart Flight Booking Mobile Application (Grade: <strong>Excellent</strong>).</li>
+                <li>Foundations: Data Structures & Algorithms, OS, Computer Architecture, Distributed Systems, Software Engineering.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- NTI -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div>
+                  <div class="timeline-role">Mobile Developer Trainee (Flutter)</div>
+                  <div class="timeline-org">National Telecommunication Institute (NTI) — Cairo, Egypt</div>
+                </div>
+                <span class="timeline-period">Mar 2025 – Jun 2025</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Built cross-platform Flutter applications applying Clean Code, BLoC/Cubit state management, and dependency injection (GetIt).</li>
+                <li>Implemented REST APIs (Dio), Firebase Suite, EN/AR localization, and Google Maps SDK.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- DEPI -->
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div>
+                  <div class="timeline-role">DevOps Trainee / Engineer</div>
+                  <div class="timeline-org">Digital Egypt Pioneers Initiative (DEPI) — Remote</div>
+                </div>
+                <span class="timeline-period">Apr 2024 – Oct 2024</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Automated CI/CD pipelines using Jenkins, Docker, and GitHub webhooks.</li>
+                <li>Provisioned cloud infrastructure on Azure with Terraform and managed configuration with Ansible.</li>
+                <li>Containerized microservices and deployed to Kubernetes clusters with Prometheus monitoring.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         7. Resume / CV Download Hub
+         ========================================================================= -->
+    <section class="resume-section" id="resume">
+      <div class="container">
+        <h2 class="section-title">Resume & Tailored CVs</h2>
+        <p class="section-subtitle">Download official 1-page FlowCV resumes tailored for target roles.</p>
+
+        <div class="cv-cards-grid">
+          <!-- Android CV -->
+          <div class="cv-download-card">
+            <div class="cv-card-icon">🤖</div>
+            <h3 class="cv-card-title">Android Developer CV</h3>
+            <p class="cv-card-desc">Focusing on Kotlin, Jetpack Compose, Clean Architecture (MVI/MVVM), Coroutines, Room DB, and Gemini AI SDK.</p>
+            <div class="cv-card-actions">
+              <a href="assets/cv/Alaa_Hany_ElGebaly_Android_CV.pdf" target="_blank" class="btn btn-glass">Preview</a>
+              <a href="assets/cv/Alaa_Hany_ElGebaly_Android_CV.pdf" download="Alaa_Hany_ElGebaly_Android_CV.pdf" class="btn btn-primary">Download PDF</a>
+            </div>
+          </div>
+
+          <!-- Flutter CV -->
+          <div class="cv-download-card">
+            <div class="cv-card-icon">🌐</div>
+            <h3 class="cv-card-title">Flutter Developer CV</h3>
+            <p class="cv-card-desc">Focusing on Flutter, Dart, BLoC/Cubit, Clean Architecture, REST API integrations (Dio), and Firebase Suite.</p>
+            <div class="cv-card-actions">
+              <a href="assets/cv/Alaa_Hany_ElGebaly_Flutter_CV.pdf" target="_blank" class="btn btn-glass">Preview</a>
+              <a href="assets/cv/Alaa_Hany_ElGebaly_Flutter_CV.pdf" download="Alaa_Hany_ElGebaly_Flutter_CV.pdf" class="btn btn-primary">Download PDF</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         8. Contact Section
+         ========================================================================= -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <h2 class="section-title">Let's Connect</h2>
+        <p class="section-subtitle">Available for mobile engineering roles, contract projects, and technical collaborations.</p>
+
+        <div class="contact-wrap">
+          <div class="contact-info-card">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1.25rem;">Direct Channels</h3>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">📧</div>
+              <div>
+                <div class="contact-item-label">Email (Direct Inbox)</div>
+                <a href="mailto:elgebaly3laa@gmail.com" class="contact-item-val">elgebaly3laa@gmail.com</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">💼</div>
+              <div>
+                <div class="contact-item-label">LinkedIn</div>
+                <a href="https://linkedin.com/in/alaa-elgebaly" target="_blank" rel="noopener" class="contact-item-val">linkedin.com/in/alaa-elgebaly</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">🐙</div>
+              <div>
+                <div class="contact-item-label">GitHub</div>
+                <a href="https://github.com/Alaa7Hany" target="_blank" rel="noopener" class="contact-item-val">github.com/Alaa7Hany</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">📞</div>
+              <div>
+                <div class="contact-item-label">Phone</div>
+                <a href="tel:+201027213855" class="contact-item-val">+20 102 721 3855</a>
+              </div>
+            </div>
+          </div>
+
+          <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
+            <h3 style="font-size: 1.3rem; margin-bottom: 0.35rem;">Send a Quick Message</h3>
+            
+            <div class="form-group">
+              <label for="name">Your Name / Organization</label>
+              <input type="text" id="name" class="form-control" placeholder="e.g. John Doe" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Your Email Address</label>
+              <input type="email" id="email" class="form-control" placeholder="e.g. recruiter@company.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" rows="4" class="form-control" placeholder="Hi Alaa, we would love to discuss a mobile developer opportunity..." required></textarea>
+            </div>
+
+            <div class="form-status-msg" id="formStatusMsg"></div>
+
+            <button type="submit" class="btn btn-primary" id="btnSubmitForm" style="margin-top: 0.35rem; justify-content: center;">
+              <span>Send Direct to Inbox</span>
+              <span>✈️</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       9. Project Deep-Dive Architecture Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="projectModal" onclick="handleModalOverlayClick(event)">
+    <div class="modal-card" id="modalCard">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalTitle" style="font-size: 1.35rem; color: var(--text-main);">Project Title</h3>
+          <p id="modalTagline" style="color: var(--accent-green); font-size: 0.88rem; margin-top: 0.2rem;">Tagline</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeProjectModal()" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-content" id="modalContent">
+        <!-- Injected dynamically via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Alaa Hany ElGebaly — Engineered with Clean Architecture & Modern Web Standards.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/projects.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
