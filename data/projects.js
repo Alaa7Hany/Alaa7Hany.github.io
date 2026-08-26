@@ -10,7 +10,7 @@ var PROJECTS_DATA = [
     badges: ["Native Android", "Gemini AI", "Compose", "Flagship"],
     themeColor: "#EE6C4D",
     githubUrl: "https://github.com/LinguaQuest-AI-Powered/LinguaQuest-Android-App",
-    youtubeUrl: "",
+    youtubeUrl: "https://youtu.be/SQ8NBcGwBbM",
     coverImage: "assets/projects/linguaquest/title.webp",
     gallery: [
       "assets/projects/linguaquest/title.webp",
