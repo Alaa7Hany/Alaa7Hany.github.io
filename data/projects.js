@@ -25,6 +25,8 @@ var PROJECTS_DATA = [
       "Clean Architecture (MVI)", "Room DB", "Hilt", "FCM", "Navigation 3"
     ],
     summary: "Transformed passive language memorization into an interactive real-world scavenger hunt where users identify objects in their physical surroundings using camera AI vision.",
+    modalSummary: "A camera-based language scavenger hunt with AI roleplay.",
+    modalHighlights: ["Gemini AI and CameraX identify objects for quests.", "Voice roleplay evaluates pronunciation.", "Room stores progress offline; FCM delivers notifications."],
     highlights: [
       "Integrated Google Gemini Multimodal AI SDK & Android CameraX for real-time object detection and quest validation.",
       "Engineered bidirectional spoken AI roleplay and pronunciation evaluation with circular 250ms audio pre-buffering.",
@@ -57,6 +59,8 @@ var PROJECTS_DATA = [
       "Paymob Payment SDK", "Clean Architecture", "Room DB", "Coroutines"
     ],
     summary: "Production-grade e-commerce Android application connecting directly with Shopify Storefront API, automated Agentic AI recommendation workflows, and secure card/wallet checkout.",
+    modalSummary: "A Shopify-connected Android storefront with secure checkout.",
+    modalHighlights: ["Shopify GraphQL powers the catalog and inventory.", "Paymob supports cards, wallets, and installments.", "n8n workflows provide product recommendations."],
     highlights: [
       "Architected real-time Shopify Storefront GraphQL query & mutation pipeline for dynamic catalog and inventory sync.",
       "Integrated Paymob payment gateway supporting credit cards, mobile wallets, and installment checkouts.",
@@ -91,6 +95,8 @@ var PROJECTS_DATA = [
       "Room DB", "Retrofit", "Coroutines & Flow", "Clean Architecture"
     ],
     summary: "Fallout Pip-Boy inspired retro-futuristic weather application with interactive map coordinate picking, live radar precipitation forecasting, and automated background alerts.",
+    modalSummary: "A weather app with live radar, maps, and background alerts.",
+    modalHighlights: ["WorkManager schedules weather alert notifications.", "Google Maps supports GPS and map selection.", "Room stores weather data for offline use."],
     highlights: [
       "Configured Android WorkManager background jobs for automated periodic weather alert notifications.",
       "Integrated Google Maps SDK with custom map styling, draggable pin markers, and GPS location tracking.",
@@ -119,6 +125,8 @@ var PROJECTS_DATA = [
       "sqflite (SQLite)", "flutter_secure_storage", "Equatable", "Feature-First Architecture"
     ],
     summary: "Event discovery and ticket booking mobile application in Flutter. Features animated onboarding, curated category feeds, real-time search cubit, and offline SQLite bookmarks.",
+    modalSummary: "A Flutter event app with live search and offline bookmarks.",
+    modalHighlights: ["Feature-first structure with BLoC and Cubit.", "SQLite stores event bookmarks offline.", "Encrypted storage keeps JWT tokens on device."],
     highlights: [
       "Structured Feature-First Clean Architecture with BLoC / Cubit state management.",
       "Engineered offline bookmarking and event persistence via local SQLite database (sqflite).",
@@ -147,6 +155,8 @@ var PROJECTS_DATA = [
       "Clean Architecture", "AI Chatbot Assistant", "Dio", "GetIt"
     ],
     summary: "Comprehensive smart flight booking graduation project (*Grade: Excellent*) featuring multi-city route search, dynamic seat selection, Stripe payment, and AI flight concierge.",
+    modalSummary: "A Flutter flight-booking app for multi-city trips and payments.",
+    modalHighlights: ["Graduation project awarded Excellent.", "BLoC supports the Clean Architecture structure.", "Stripe checkout creates PDF boarding passes."],
     highlights: [
       "Awarded Grade: Excellent for graduation project capstone engineering.",
       "Implemented Clean Architecture with BLoC state management and strict layer decoupling.",
@@ -181,6 +191,8 @@ var PROJECTS_DATA = [
       "Alamofire", "Lottie iOS", "XCTest"
     ],
     summary: "Native iOS sports analytics application tracking live match results, upcoming fixtures, team rosters, and offline favorite team persistence via CoreData.",
+    modalSummary: "An iOS sports app for live results, fixtures, and saved teams.",
+    modalHighlights: ["Swift app structured with MVP.", "CoreData saves favorite teams offline.", "Alamofire handles network requests and JSON."],
     highlights: [
       "Implemented MVP architecture in Swift with strict protocol-oriented presenter-view contracts.",
       "Configured CoreData entity relational model for seamless offline persistence of leagues and teams.",
@@ -209,6 +221,8 @@ var PROJECTS_DATA = [
       "Koin DI", "JWT Auth & BCrypt", "kotlinx.serialization", "Docker", "MockK"
     ],
     summary: "Transactional e-commerce backend built with Kotlin and Ktor. Handles JWT authentication, paginated catalog discovery, persistent carts, and atomic checkout transactions.",
+    modalSummary: "A Kotlin and Ktor API for catalogs, carts, and checkout.",
+    modalHighlights: ["PostgreSQL transactions keep checkout atomic.", "Koin connects controller, service, and repository layers.", "Checkout locks item prices for each order."],
     highlights: [
       "Engineered atomic checkout flow within a single PostgreSQL suspended transaction with rollback safety.",
       "Designed decoupled Controller-Service-Repository architecture with Koin dependency injection.",
@@ -237,6 +251,8 @@ var PROJECTS_DATA = [
       "URLSession", "AutoLayout", "REST API"
     ],
     summary: "Native iOS weather forecasting application in Swift and UIKit. Displays current temperatures, hourly radar breakdowns, 5-day outlooks, and multi-city favorites.",
+    modalSummary: "An iOS weather app with hourly forecasts and saved cities.",
+    modalHighlights: ["CoreLocation detects the current location.", "City search reports weather and atmospheric metrics.", "Saved cities remain available offline."],
     highlights: [
       "Integrated Apple CoreLocation GPS for automatic real-time location weather detection.",
       "Engineered global city lookup parsing atmospheric metrics (humidity, wind speed, UV index).",
@@ -271,6 +287,8 @@ var PROJECTS_DATA = [
       "RxJava2 / ReactiveX", "Retrofit2", "Firebase Auth", "Calendar Provider"
     ],
     summary: "Comprehensive meal planning and recipe exploration Android application with weekly dietary scheduling, ingredient checklists, and Google Calendar sync.",
+    modalSummary: "A meal planner with shopping lists and calendar sync.",
+    modalHighlights: ["RxJava handles asynchronous data streams.", "Room stores meal plans and shopping lists.", "Android Calendar syncs meal reminders."],
     highlights: [
       "Engineered asynchronous reactive data streams using RxJava2 (Observables, Single, Schedulers).",
       "Built multi-table Room Database schema for favorite meals, offline meal plans, and shopping lists.",
@@ -299,6 +317,8 @@ var PROJECTS_DATA = [
       "Cloud Firestore", "Firebase Storage", "FCM Push Notifications"
     ],
     summary: "Real-time chat platform with instant 1-on-1 and group messaging, media sharing, live user presence indicators, and background push notifications.",
+    modalSummary: "A Flutter messaging app with cloud chat and push notifications.",
+    modalHighlights: ["Firestore streams update chats in real time.", "Firebase Cloud Messaging routes notifications.", "Authentication includes email verification and media storage."],
     highlights: [
       "Engineered real-time Firestore stream listeners for instant sub-100ms message delivery.",
       "Integrated Firebase Cloud Messaging (FCM) payload handlers for foreground/background notification routing.",
@@ -327,6 +347,8 @@ var PROJECTS_DATA = [
       "GetIt DI", "SharedPreferences", "EN/AR Localization"
     ],
     summary: "Production-grade mobile storefront application with catalog search, cart management, and bilingual English/Arabic localization.",
+    modalSummary: "A bilingual Flutter storefront with catalog and cart.",
+    modalHighlights: ["BLoC manages catalog and cart state.", "Dio interceptors inject authentication tokens.", "The interface supports Arabic RTL and English LTR."],
     highlights: [
       "Implemented BLoC state management for predictable UI transitions during cart and catalog updates.",
       "Integrated Dio REST client with custom interceptors for authentication token injection.",
@@ -355,6 +377,8 @@ var PROJECTS_DATA = [
       "Ansible", "Prometheus", "Grafana", "Linux / Bash"
     ],
     summary: "End-to-end automated Continuous Integration and Continuous Deployment infrastructure provisioning and container orchestration on Azure.",
+    modalSummary: "An Azure delivery pipeline built with Jenkins and Kubernetes.",
+    modalHighlights: ["Terraform and Ansible provision Azure infrastructure.", "Jenkins runs multi-stage pipelines and tests.", "Kubernetes deployments use Prometheus and Grafana monitoring."],
     highlights: [
       "Provisioned cloud infrastructure on Azure declaratively using Terraform and Ansible configuration management.",
       "Configured automated multi-stage Jenkins pipelines with GitHub webhook triggering and automated testing.",

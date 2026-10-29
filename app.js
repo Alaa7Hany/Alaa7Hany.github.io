@@ -1,99 +1,223 @@
 /**
  * Portfolio Application Controller
- * Handles Pip-Boy theme switching (Dark/Light), project filtering,
- * top 3 initial project display with expandable toggle, architecture deep-dive modal,
- * gallery carousel, and async contact form handling.
+ * Handles responsive navigation, project browsing and details, verified experience,
+ * and async contact form feedback.
  */
 
 let isProjectsExpanded = false;
 let currentCategoryFilter = "all";
+let projectModalReturnFocus = null;
+let isContactSubmitting = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
-  initCursorGlow();
   initNavbarScroll();
+  initMobileNavigation();
   initCategoryFilters();
+  initSelectedProjectDetails();
+  initProjectExpansion();
+  initProjectModalInteractions();
+  initContactForm();
   renderProjectCards();
+  renderExperience();
 });
 
-/* --------------------------------------------------------------------------
-   1. Dual Theme System (Dark / Light)
-   -------------------------------------------------------------------------- */
 function initTheme() {
-  const savedTheme = localStorage.getItem("portfolio-theme") || "dark";
-  document.documentElement.setAttribute("data-theme", savedTheme);
-  updateThemeToggleIcon(savedTheme);
-}
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
+  let theme = root.dataset.theme === "light" ? "light" : "dark";
 
-function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
-  const newTheme = currentTheme === "dark" ? "light" : "dark";
-  
-  document.documentElement.setAttribute("data-theme", newTheme);
-  localStorage.setItem("portfolio-theme", newTheme);
-  updateThemeToggleIcon(newTheme);
-}
+  try {
+    const savedTheme = localStorage.getItem("portfolio-theme");
+    if (savedTheme === "light" || savedTheme === "dark") theme = savedTheme;
+  } catch {}
 
-function updateThemeToggleIcon(theme) {
-  const btn = document.getElementById("themeToggle");
-  if (!btn) return;
-  btn.textContent = theme === "dark" ? "☀️" : "🌙";
-  btn.setAttribute("title", theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode");
-}
+  const applyTheme = (nextTheme) => {
+    theme = nextTheme === "light" ? "light" : "dark";
+    root.dataset.theme = theme;
+    const nextLabel = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+    toggle?.setAttribute("aria-label", nextLabel);
+    toggle?.setAttribute("title", nextLabel);
+  };
 
-/* --------------------------------------------------------------------------
-   2. Cursor Ambient Light Glow
-   -------------------------------------------------------------------------- */
-function initCursorGlow() {
-  const cursorGlow = document.getElementById("cursorGlow");
-  if (!cursorGlow) return;
-
-  window.addEventListener("mousemove", (e) => {
-    cursorGlow.style.left = `${e.clientX}px`;
-    cursorGlow.style.top = `${e.clientY}px`;
+  applyTheme(theme);
+  toggle?.addEventListener("click", () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+    try {
+      localStorage.setItem("portfolio-theme", nextTheme);
+    } catch {}
   });
 }
 
+function initMobileNavigation() {
+  const toggle = document.getElementById("navToggle");
+  const links = document.getElementById("navLinks");
+  if (!toggle || !links) return;
+
+  const mobileQuery = window.matchMedia("(max-width: 768px)");
+  let isOpen = false;
+  const syncViewport = () => {
+    toggle.hidden = !mobileQuery.matches;
+    if (!mobileQuery.matches) isOpen = false;
+    links.hidden = mobileQuery.matches && !isOpen;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    toggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+    toggle.querySelector(".nav-toggle-label").textContent = isOpen ? "Close" : "Menu";
+  };
+  const closeMenu = (restoreFocus = false) => {
+    if (!mobileQuery.matches || !isOpen) return;
+    isOpen = false;
+    syncViewport();
+    if (restoreFocus) toggle.focus();
+  };
+
+  toggle.addEventListener("click", () => {
+    isOpen = !isOpen;
+    syncViewport();
+    if (isOpen) links.querySelector("a:not([hidden])")?.focus();
+  });
+  links.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu(true);
+  });
+  mobileQuery.addEventListener("change", syncViewport);
+  syncViewport();
+}
+
+function renderExperience() {
+  const section = document.getElementById("experience");
+  const list = document.getElementById("experienceList");
+  const navLink = document.querySelector("[data-experience-link]");
+  const entries = Array.isArray(EXPERIENCE_DATA) ? EXPERIENCE_DATA : [];
+  if (!section || !list) return;
+
+  if (entries.length === 0) {
+    section.hidden = true;
+    const navItem = navLink?.closest("li");
+    if (navItem) navItem.hidden = true;
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+  entries.forEach((entry) => {
+    const article = document.createElement("article");
+    article.className = "experience-entry";
+
+    const meta = document.createElement("div");
+    meta.className = "experience-meta";
+    const period = document.createElement("p");
+    period.className = "experience-period";
+    period.textContent = entry.period;
+    const location = document.createElement("p");
+    location.className = "experience-location";
+    location.textContent = entry.location;
+    meta.append(location, period);
+
+    const heading = document.createElement("div");
+    heading.className = "experience-heading";
+    const title = document.createElement("h3");
+    title.textContent = entry.title;
+    const organization = document.createElement("p");
+    organization.className = "experience-organization";
+    organization.textContent = entry.organization;
+    heading.append(title, organization);
+
+    const statement = document.createElement("p");
+    statement.className = "experience-statement";
+    statement.textContent = entry.statement || "";
+    const responsibilities = document.createElement("ul");
+    responsibilities.className = "experience-responsibilities";
+    (entry.outcomes || []).forEach((responsibility) => {
+      const item = document.createElement("li");
+      item.textContent = responsibility;
+      responsibilities.append(item);
+    });
+
+    const technologies = document.createElement("p");
+    technologies.className = "experience-technologies";
+    technologies.textContent = entry.technologies.join(" · ");
+    article.append(heading, statement, responsibilities, technologies);
+    if (entry.url) {
+      const link = document.createElement("a");
+      link.className = "experience-visit";
+      link.href = entry.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = entry.linkLabel || "Visit project";
+      article.append(link);
+    }
+    article.append(meta);
+
+    fragment.append(article);
+  });
+  list.replaceChildren(fragment);
+}
+
+function initSelectedProjectDetails() {
+  document.querySelectorAll(".project-detail-link").forEach((button) => {
+    button.addEventListener("click", () => openProjectModal(button.dataset.projectId, button));
+  });
+}
+
+function initProjectExpansion() {
+  const button = document.getElementById("btnToggleAllProjects");
+  if (button) button.addEventListener("click", toggleAllProjects);
+}
+
 /* --------------------------------------------------------------------------
-   3. Navbar Scroll Spy & Sticky Highlight
+   1. Navbar Scroll Spy & Sticky Highlight
    -------------------------------------------------------------------------- */
 function initNavbarScroll() {
   const navLinks = document.querySelectorAll(".nav-link");
   const sections = document.querySelectorAll("section[id]");
-
-  window.addEventListener("scroll", () => {
-    let current = "";
-    const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop - 120;
-      const sectionHeight = section.offsetHeight;
-      if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-        current = section.getAttribute("id");
-      }
-    });
-
+  const navbar = document.getElementById("navbar");
+  const updateActiveLink = (preferHash = false) => {
+    const hashSection = preferHash ? document.getElementById(location.hash.slice(1)) : null;
+    const sectionIsVisible = (section) => section && !section.hidden;
+    const scrollLine = window.scrollY + (navbar?.offsetHeight || 0) + 24;
+    let current = sectionIsVisible(hashSection) ? hashSection.id : "";
+    if (!current) {
+      current = "home";
+      sections.forEach((section) => {
+        if (!section.hidden && section.offsetTop <= scrollLine) current = section.id;
+      });
+    }
+    if (current === "home" || current === "projects") current = "projects";
+    if (["education", "credentials", "resume"].includes(current)) current = "credentials";
     navLinks.forEach((link) => {
-      link.classList.remove("active");
-      if (link.getAttribute("href") === `#${current}`) {
-        link.classList.add("active");
-      }
+      link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
+    });
+  };
+
+  window.addEventListener("scroll", () => updateActiveLink(), { passive: true });
+  window.addEventListener("hashchange", () => updateActiveLink(true));
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      navLinks.forEach((item) => item.classList.toggle("active", item === link));
     });
   });
+  updateActiveLink(true);
 }
 
 /* --------------------------------------------------------------------------
-   4. Category Filtering & Top 3 / Show All Logic
+   2. Category Filtering & Top 3 / Show More Logic
    -------------------------------------------------------------------------- */
 function initCategoryFilters() {
   const filterTabs = document.getElementById("filterTabs");
   if (!filterTabs) return;
 
   const tabButtons = filterTabs.querySelectorAll(".tab-btn");
+  tabButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.classList.contains("active")));
+  });
   tabButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       tabButtons.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
+      tabButtons.forEach((button) => button.setAttribute("aria-pressed", String(button === btn)));
 
       currentCategoryFilter = btn.getAttribute("data-filter");
       // Reset expansion when switching to "all", but show all when filtering by specific category
@@ -119,22 +243,23 @@ function renderProjectCards() {
   const btnToggle = document.getElementById("btnToggleAllProjects");
 
   if (!grid || typeof PROJECTS_DATA === "undefined") return;
-
-  grid.innerHTML = "";
+  const projects = Array.isArray(PROJECTS_DATA) ? PROJECTS_DATA : [];
+  grid.replaceChildren();
 
   // 1. Filter by category
-  const filteredProjects = PROJECTS_DATA.filter((proj) => {
+  const filteredProjects = projects.filter((proj) => {
     if (currentCategoryFilter === "all") return true;
     return proj.category === currentCategoryFilter;
   });
 
   if (filteredProjects.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-        <p>No projects found for this category.</p>
-      </div>
-    `;
-    if (showMoreWrap) showMoreWrap.style.display = "none";
+    const emptyState = document.createElement("p");
+    emptyState.className = "projects-empty-state";
+    emptyState.textContent = projects.length === 0
+      ? "Projects will appear here soon."
+      : "No projects found in this category.";
+    grid.append(emptyState);
+    if (showMoreWrap) showMoreWrap.hidden = true;
     return;
   }
 
@@ -146,16 +271,12 @@ function renderProjectCards() {
 
   // 3. Update Toggle Button UI
   if (showMoreWrap && btnToggle) {
-    if (currentCategoryFilter === "all" && filteredProjects.length > 3) {
-      showMoreWrap.style.display = "flex";
-      if (isProjectsExpanded) {
-        btnToggle.innerHTML = `<span>Show Less (Top 3)</span><span>↑</span>`;
-      } else {
-        btnToggle.innerHTML = `<span>Show All Projects (${filteredProjects.length})</span><span>↓</span>`;
-      }
-    } else {
-      showMoreWrap.style.display = "none";
-    }
+    const canExpand = currentCategoryFilter === "all" && filteredProjects.length > 3;
+    showMoreWrap.hidden = !canExpand;
+    btnToggle.textContent = isProjectsExpanded
+      ? "Show fewer projects"
+      : "Show more projects";
+    btnToggle.setAttribute("aria-expanded", String(isProjectsExpanded));
   }
 
   // 4. Render Cards
@@ -169,25 +290,14 @@ function renderProjectCards() {
     if (proj.coverImage) {
       previewHtml = `
         <div class="project-preview">
-          <img src="${proj.coverImage}" alt="${proj.title}" loading="lazy" />
+          <img src="${proj.coverImage}" alt="${proj.title}" width="640" height="360" loading="lazy" />
           <span class="project-badge-corner">${badgeText}</span>
         </div>
       `;
     } else {
-      const categoryIcon =
-        proj.category === "android"
-          ? "🤖"
-          : proj.category === "flutter"
-          ? "🌐"
-          : proj.category === "ios"
-          ? "🍎"
-          : "⚙️";
       previewHtml = `
-        <div class="project-preview">
-          <div class="project-dynamic-banner">
-            <span class="project-dynamic-icon">${categoryIcon}</span>
-            <span style="font-family: var(--font-display); font-weight: 700; color: var(--text-main); font-size: 1.05rem;">${proj.title}</span>
-          </div>
+        <div class="project-preview project-preview-empty">
+          <span>${proj.title}</span>
           <span class="project-badge-corner">${badgeText}</span>
         </div>
       `;
@@ -212,22 +322,25 @@ function renderProjectCards() {
           }
         </div>
         <div class="project-card-footer">
-          <a href="${
-            proj.githubUrl
-          }" target="_blank" rel="noopener" class="btn-card-action btn-repo">
+          ${proj.githubUrl ? `<a href="${proj.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-repo">
             <span>GitHub</span>
             <span>↗</span>
-          </a>
-          <button type="button" class="btn-card-action btn-deep-dive" onclick="openProjectModal('${
-            proj.id
-          }')">
+          </a>` : ""}
+          <button type="button" class="btn-card-action btn-deep-dive" data-project-id="${proj.id}" aria-haspopup="dialog" aria-label="Open ${proj.title} project details">
             <span>Deep Dive</span>
-            <span>🔍</span>
+            <span aria-hidden="true">↗</span>
           </button>
         </div>
       </div>
     `;
 
+    const image = card.querySelector(".project-preview img");
+    if (image) {
+      image.addEventListener("error", () => image.closest(".project-preview")?.remove(), { once: true });
+    }
+    card.querySelector(".btn-deep-dive")?.addEventListener("click", (event) => {
+      openProjectModal(proj.id, event.currentTarget);
+    });
     grid.appendChild(card);
   });
 }
@@ -235,7 +348,27 @@ function renderProjectCards() {
 /* --------------------------------------------------------------------------
    6. Architecture Deep-Dive Modal Logic
    -------------------------------------------------------------------------- */
-function openProjectModal(projectId) {
+function initProjectModalInteractions() {
+  const modal = document.getElementById("projectModal");
+  const closeButton = document.getElementById("modalCloseButton");
+  const modalContent = document.getElementById("modalContent");
+  if (!modal || !closeButton || !modalContent) return;
+
+  closeButton.addEventListener("click", closeProjectModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeProjectModal();
+      return;
+    }
+    if (event.target.closest(".modal-close-action")) closeProjectModal();
+  });
+  modal.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeProjectModal();
+  });
+}
+
+function openProjectModal(projectId, trigger = document.activeElement) {
   if (typeof PROJECTS_DATA === "undefined") return;
   const proj = PROJECTS_DATA.find((p) => p.id === projectId);
   if (!proj) return;
@@ -245,227 +378,311 @@ function openProjectModal(projectId) {
   const modalTagline = document.getElementById("modalTagline");
   const modalContent = document.getElementById("modalContent");
 
-  modalTitle.textContent = proj.title;
-  modalTagline.textContent = proj.tagline;
+  if (modal.open) closeProjectModal();
+  projectModalReturnFocus = trigger;
+  modalTitle.textContent = proj.title || "Project details";
+  modalTagline.textContent = proj.modalSummary || proj.tagline || proj.summary || "";
+  modalTagline.hidden = !modalTagline.textContent;
+  const mediaPaths = [...new Set([
+    ...(Array.isArray(proj.gallery) ? proj.gallery : []),
+    proj.coverImage
+  ].filter(Boolean))];
+  modalContent.replaceChildren();
 
-  // Video Embed
-  let videoEmbedHtml = "";
-  if (proj.youtubeUrl && proj.youtubeUrl.trim() !== "") {
-    const videoId = extractYouTubeId(proj.youtubeUrl);
-    if (videoId) {
-      videoEmbedHtml = `
-        <div class="modal-video-wrapper">
-          <iframe 
-            src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0" 
-            title="${proj.title} Demo" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-          </iframe>
-        </div>
-      `;
-    }
+  if (mediaPaths.length) {
+    const figure = document.createElement("figure");
+    figure.className = "modal-gallery";
+
+    const stage = document.createElement("div");
+    stage.className = "modal-gallery-stage";
+    let image = document.createElement("img");
+    image.className = "modal-gallery-image";
+    image.width = 1280;
+    image.height = 720;
+    image.decoding = "async";
+
+    const previous = document.createElement("button");
+    previous.className = "modal-gallery-control modal-gallery-previous";
+    previous.type = "button";
+    previous.setAttribute("aria-label", "Show previous project image");
+    previous.textContent = "‹";
+
+    const next = document.createElement("button");
+    next.className = "modal-gallery-control modal-gallery-next";
+    next.type = "button";
+    next.setAttribute("aria-label", "Show next project image");
+    next.textContent = "›";
+
+    const counter = document.createElement("figcaption");
+    counter.className = "modal-gallery-counter";
+    counter.setAttribute("aria-live", "polite");
+
+    const thumbnails = document.createElement("div");
+    thumbnails.className = "modal-gallery-thumbnails";
+    thumbnails.setAttribute("aria-label", `${proj.title} project images`);
+
+    let availablePaths = [...mediaPaths];
+    let activeIndex = 0;
+
+    const removeUnavailablePath = (failedPath) => {
+      const failedIndex = availablePaths.indexOf(failedPath);
+      if (failedIndex === -1) return;
+      availablePaths.splice(failedIndex, 1);
+      if (failedIndex < activeIndex) activeIndex -= 1;
+      if (activeIndex >= availablePaths.length) activeIndex = 0;
+      renderGallery();
+    };
+
+    const renderGallery = () => {
+      if (!availablePaths.length) {
+        figure.remove();
+        return;
+      }
+
+      activeIndex = (activeIndex + availablePaths.length) % availablePaths.length;
+      const activePath = availablePaths[activeIndex];
+      const nextImage = image.cloneNode(false);
+      nextImage.src = activePath;
+      nextImage.alt = `${proj.title} project preview ${activeIndex + 1} of ${availablePaths.length}`;
+      nextImage.addEventListener("error", () => removeUnavailablePath(activePath), { once: true });
+      image.replaceWith(nextImage);
+      image = nextImage;
+      counter.textContent = `${activeIndex + 1} / ${availablePaths.length}`;
+      previous.hidden = availablePaths.length < 2;
+      next.hidden = availablePaths.length < 2;
+      thumbnails.hidden = availablePaths.length < 2;
+      stage.tabIndex = availablePaths.length > 1 ? 0 : -1;
+      stage.setAttribute(
+        "aria-label",
+        availablePaths.length > 1
+          ? `${proj.title} image gallery. Use left and right arrow keys to browse.`
+          : `${proj.title} project image.`
+      );
+
+      thumbnails.replaceChildren();
+      availablePaths.forEach((path, index) => {
+        const button = document.createElement("button");
+        button.className = "modal-gallery-thumbnail";
+        button.type = "button";
+        button.setAttribute("aria-label", `Show project image ${index + 1}`);
+        const isActive = index === activeIndex;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-current", isActive ? "true" : "false");
+
+        const thumbnail = document.createElement("img");
+        thumbnail.src = path;
+        thumbnail.alt = "";
+        thumbnail.width = 160;
+        thumbnail.height = 90;
+        thumbnail.loading = "lazy";
+        thumbnail.addEventListener("error", () => removeUnavailablePath(path), { once: true });
+        button.addEventListener("click", () => showImage(index));
+        button.append(thumbnail);
+        thumbnails.append(button);
+      });
+
+      thumbnails.querySelector(".active")?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    };
+
+    const showImage = (index) => {
+      activeIndex = index;
+      renderGallery();
+    };
+
+    previous.addEventListener("click", () => showImage(activeIndex - 1));
+    next.addEventListener("click", () => showImage(activeIndex + 1));
+    stage.addEventListener("keydown", (event) => {
+      if (availablePaths.length < 2) return;
+      if (event.key === "ArrowLeft") showImage(activeIndex - 1);
+      else if (event.key === "ArrowRight") showImage(activeIndex + 1);
+      else if (event.key === "Home") showImage(0);
+      else if (event.key === "End") showImage(availablePaths.length - 1);
+      else return;
+      event.preventDefault();
+    });
+    stage.append(image, previous, next, counter);
+    figure.append(stage, thumbnails);
+    modalContent.append(figure);
+    renderGallery();
   }
 
-  // Image Gallery
-  let galleryHtml = "";
-  if (proj.gallery && proj.gallery.length > 0) {
-    const thumbsHtml = proj.gallery
-      .map(
-        (src, idx) => `
-        <img 
-          src="${src}" 
-          alt="Screenshot ${idx + 1}" 
-          class="modal-thumb ${idx === 0 ? "active" : ""}" 
-          onclick="switchModalGallerySlide('${src}', this)" 
-        />
-      `
-      )
-      .join("");
-
-    galleryHtml = `
-      <div class="modal-gallery-container">
-        <div class="modal-gallery-main">
-          <img id="modalMainImg" src="${proj.gallery[0]}" alt="${proj.title} Showcase" />
-        </div>
-        ${
-          proj.gallery.length > 1
-            ? `<div class="modal-thumbs-row">${thumbsHtml}</div>`
-            : ""
-        }
-      </div>
-    `;
+  const highlights = Array.isArray(proj.modalHighlights)
+    ? proj.modalHighlights.slice(0, 3)
+    : (Array.isArray(proj.highlights) ? proj.highlights.slice(0, 3) : []);
+  if (highlights.length) {
+    const section = document.createElement("section");
+    section.className = "modal-highlights";
+    const heading = document.createElement("h4");
+    heading.textContent = "Highlights";
+    const list = document.createElement("ul");
+    highlights.forEach((highlight) => {
+      const item = document.createElement("li");
+      item.textContent = makeConciseHighlight(highlight);
+      list.append(item);
+    });
+    section.append(heading, list);
+    modalContent.append(section);
   }
 
-  // Highlights
-  const highlightsHtml = proj.highlights
-    .map((h) => `<li style="margin-bottom: 0.4rem;">${h}</li>`)
-    .join("");
+  const technologies = document.createElement("p");
+  technologies.className = "modal-technologies";
+  technologies.textContent = (Array.isArray(proj.techStack) ? proj.techStack.slice(0, 5) : []).join(" · ");
+  if (technologies.textContent) modalContent.append(technologies);
 
-  // Tech Chips
-  const techChipsHtml = proj.techStack
-    .map(
-      (t) => `
-      <span style="background: var(--bg-tag); border: 1px solid var(--border-glass); padding: 0.25rem 0.65rem; border-radius: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-green);">
-        ${t}
-      </span>
-    `
-    )
-    .join("");
+  const links = document.createElement("div");
+  links.className = "modal-links";
+  [
+    [proj.githubUrl, "GitHub repository"],
+    [proj.youtubeUrl, "Watch demo"]
+  ].forEach(([url, label]) => {
+    if (!url) return;
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = `${label} ↗`;
+    links.append(link);
+  });
+  if (links.childElementCount) modalContent.append(links);
 
-  modalContent.innerHTML = `
-    ${videoEmbedHtml}
-    ${galleryHtml}
-
-    <div style="margin-bottom: 1.35rem;">
-      <h4 style="font-size: 1.02rem; color: var(--accent-green); margin-bottom: 0.35rem;">Overview & Problem Solved</h4>
-      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">${
-        proj.summary
-      }</p>
-    </div>
-
-    <div style="margin-bottom: 1.35rem;">
-      <h4 style="font-size: 1.02rem; color: var(--accent-gold); margin-bottom: 0.35rem;">Key Engineering Highlights</h4>
-      <ul style="list-style: disc; padding-left: 1.15rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.55;">
-        ${highlightsHtml}
-      </ul>
-    </div>
-
-    <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: 0.85rem; padding: 1.15rem; margin-bottom: 1.35rem;">
-      <h4 style="font-size: 1.02rem; color: var(--accent-green); margin-bottom: 0.55rem;">🏗️ System Architecture & Decisions</h4>
-      <div style="margin-bottom: 0.55rem;">
-        <strong style="color: var(--text-main); font-size: 0.88rem;">Pattern:</strong> 
-        <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.84rem;">${
-          proj.architecture.pattern
-        }</span>
-      </div>
-      <div style="margin-bottom: 0.55rem;">
-        <strong style="color: var(--text-main); font-size: 0.88rem;">Data Flow:</strong> 
-        <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.84rem;">${
-          proj.architecture.layers
-        }</span>
-      </div>
-      <div>
-        <strong style="color: var(--text-main); font-size: 0.88rem;">Key Technical Decisions:</strong> 
-        <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem;">${
-          proj.architecture.keyDecisions
-        }</p>
-      </div>
-    </div>
-
-    <div style="margin-bottom: 1.35rem;">
-      <h4 style="font-size: 1.02rem; color: var(--text-main); margin-bottom: 0.55rem;">Complete Tech Stack</h4>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
-        ${techChipsHtml}
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 0.75rem; padding-top: 0.85rem; border-top: 1px solid var(--border-glass);">
-      <a href="${
-        proj.githubUrl
-      }" target="_blank" rel="noopener" class="btn btn-primary" style="flex: 1; justify-content: center;">
-        <span>Explore GitHub Repository</span>
-        <span>↗</span>
-      </a>
-      <button type="button" class="btn btn-glass" onclick="closeProjectModal()">
-        Close
-      </button>
-    </div>
-  `;
-
-  modal.classList.add("active");
-  document.body.style.overflow = "hidden";
+  document.body.classList.add("modal-open");
+  modal.showModal();
+  document.getElementById("modalCloseButton")?.focus();
 }
 
 function closeProjectModal() {
   const modal = document.getElementById("projectModal");
-  if (!modal) return;
-  modal.classList.remove("active");
-  document.body.style.overflow = "";
+  if (!modal?.open) return;
+  modal.close();
+  document.body.classList.remove("modal-open");
 
   const modalContent = document.getElementById("modalContent");
-  if (modalContent) modalContent.innerHTML = "";
+  if (modalContent) modalContent.replaceChildren();
+  if (projectModalReturnFocus?.isConnected) projectModalReturnFocus.focus();
+  projectModalReturnFocus = null;
 }
 
-function handleModalOverlayClick(event) {
-  if (event.target.id === "projectModal") {
-    closeProjectModal();
-  }
-}
-
-function switchModalGallerySlide(src, thumbElement) {
-  const mainImg = document.getElementById("modalMainImg");
-  if (mainImg) {
-    mainImg.src = src;
-  }
-  const thumbs = document.querySelectorAll(".modal-thumb");
-  thumbs.forEach((t) => t.classList.remove("active"));
-  if (thumbElement) {
-    thumbElement.classList.add("active");
-  }
-}
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    closeProjectModal();
-  }
-});
-
-function extractYouTubeId(url) {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return match && match[2].length === 11 ? match[2] : null;
+function makeConciseHighlight(value) {
+  const text = String(value || "").trim();
+  if (text.length <= 132) return text;
+  const shortened = text.slice(0, 129).replace(/\s+\S*$/, "");
+  return `${shortened}…`;
 }
 
 /* --------------------------------------------------------------------------
-   7. Contact Form Handling (Direct to Gmail Inbox)
+   7. Contact Form Handling
    -------------------------------------------------------------------------- */
+function initContactForm() {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+
+  form.addEventListener("submit", handleContactSubmit);
+  form.querySelectorAll(".form-control").forEach((field) => {
+    field.addEventListener("input", () => {
+      if (field.getAttribute("aria-invalid") !== "true") return;
+      updateContactFieldError(field);
+      const status = document.getElementById("formStatusMsg");
+      if (status?.dataset.state === "validation" && form.querySelector('[aria-invalid="true"]') === null) {
+        setContactStatus(status, "", "");
+      }
+    });
+  });
+}
+
+function updateContactFieldError(field) {
+  const error = document.getElementById(`${field.id}Error`);
+  const label = document.querySelector(`label[for="${field.id}"]`)?.textContent || "This field";
+  let message = "";
+
+  if (field.required && !field.value.trim()) {
+    message = `${label} is required.`;
+  } else if (field.type === "email" && !field.validity.valid) {
+    message = "Enter a valid email address.";
+  }
+
+  field.setAttribute("aria-invalid", String(Boolean(message)));
+  if (error) {
+    error.textContent = message;
+    error.hidden = !message;
+  }
+  return message;
+}
+
+function setContactStatus(status, message, state) {
+  status.textContent = message;
+  const visualState = state === "validation" ? "error" : state;
+  status.className = `form-status-msg${visualState ? ` ${visualState}` : ""}`;
+  status.dataset.state = state;
+  status.hidden = !message;
+}
+
 async function handleContactSubmit(event) {
   event.preventDefault();
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const message = document.getElementById("message").value.trim();
-  const statusMsg = document.getElementById("formStatusMsg");
-  const submitBtn = document.getElementById("btnSubmitForm");
+  if (isContactSubmitting) return;
 
-  if (!name || !email || !message) return;
+  const form = event.currentTarget;
+  const fields = [...form.querySelectorAll(".form-control")];
+  const invalidFields = fields.filter((field) => updateContactFieldError(field));
+  const status = document.getElementById("formStatusMsg");
+  if (invalidFields.length > 0) {
+    setContactStatus(status, "Please check the highlighted fields.", "validation");
+    invalidFields[0].focus();
+    return;
+  }
 
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = `<span>Sending...</span><span>⏳</span>`;
+  const submitButton = document.getElementById("btnSubmitForm");
+  const [nameField, emailField, messageField] = fields;
+  const payload = {
+    name: nameField.value.trim(),
+    email: emailField.value.trim(),
+    message: messageField.value.trim()
+  };
+  const controller = new AbortController();
+  let timeoutId;
+
+  isContactSubmitting = true;
+  form.setAttribute("aria-busy", "true");
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending…";
+  setContactStatus(status, "Sending your message…", "pending");
 
   try {
-    // Attempt async submission to free public email forwarder (FormSubmit / Formspree)
+    timeoutId = window.setTimeout(() => controller.abort(), 20000);
     const response = await fetch("https://formsubmit.co/ajax/elgebaly3laa@gmail.com", {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        name: name,
-        email: email,
-        message: message,
-        _subject: `New Mobile Developer Inquiry from ${name}`
-      })
+        ...payload,
+        _subject: `New Mobile Developer Inquiry from ${payload.name}`
+      }),
+      signal: controller.signal
     });
 
-    if (response.ok) {
-      statusMsg.className = "form-status-msg success";
-      statusMsg.textContent = "✓ Message sent successfully! It has been delivered directly to elgebaly3laa@gmail.com.";
-      document.getElementById("contactForm").reset();
-    } else {
-      throw new Error("Form forwarding endpoint responded with error");
-    }
+    if (!response.ok) throw new Error("The message service returned an error.");
+    form.reset();
+    fields.forEach((field) => {
+      field.removeAttribute("aria-invalid");
+      const error = document.getElementById(`${field.id}Error`);
+      if (error) {
+        error.textContent = "";
+        error.hidden = true;
+      }
+    });
+    setContactStatus(status, "Message sent. Thank you for reaching out.", "success");
   } catch (error) {
-    // Fallback: Trigger default mail client
-    const subject = encodeURIComponent(`Mobile Opportunity from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    window.location.href = `mailto:elgebaly3laa@gmail.com?subject=${subject}&body=${body}`;
-
-    statusMsg.className = "form-status-msg success";
-    statusMsg.textContent = "Your email client has been opened to complete sending the message to elgebaly3laa@gmail.com.";
+    setContactStatus(
+      status,
+      "Your message could not be sent. Your details are still here; please try again or contact me by WhatsApp or email.",
+      "error"
+    );
   } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = `<span>Send Direct to Inbox</span><span>✈️</span>`;
+    window.clearTimeout(timeoutId);
+    isContactSubmitting = false;
+    form.removeAttribute("aria-busy");
+    submitButton.disabled = false;
+    submitButton.textContent = "Send message";
   }
 }
